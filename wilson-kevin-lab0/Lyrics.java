@@ -21,7 +21,7 @@ public class Lyrics
   public static void printHeader()
   {
     System.out.print( "Lab 0 written by Kevin Wilson\n" + 
-                      "\"Rock and Roll All Nite\" by Kiss\n" + 
+                      "\"Rock and Roll All Nite\" by KISS\n" + 
                       "Lyrics from http://www.azlyrics.com/lyrics/kiss/rockandrollallnite.html\n\n" );
   }
 
