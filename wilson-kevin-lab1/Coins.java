@@ -6,8 +6,10 @@ import java.util.*;
 
 public class Coins
 {
+  // Scanner class constant
   public static final Scanner INPUT = new Scanner( System.in );
 
+  // Entry point to program
   public static void main( String[] args )
   {
     makeHeader();
@@ -15,6 +17,7 @@ public class Coins
     convertToCoins();
   }
 
+  // Get name and print header
   public static void makeHeader()
   {
     System.out.print( "Please enter your first name: " );
@@ -22,6 +25,7 @@ public class Coins
     System.out.println( "\nLab 1 written by " + name + "\n" );
   }
 
+  // Get amount of coins and convert to dollar value
   public static void convertToDollars()
   {
     System.out.println( "Please enter a number for each type of coin to see the total value" );
@@ -44,5 +48,28 @@ public class Coins
 
     System.out.println( "Total coins: " + totalCoins );
     System.out.println( "Value: " + value + "\n" );
+  }
+
+  // Get dollar value and print amount of coins to equal value
+  public static void convertToCoins()
+  {
+    System.ou.print( "Please enter a valid monetary value: " );
+    double value = INPUT.nextDouble();
+    System.out.println( "\n" );
+
+    int cents = ( int ) ( value * 100 );
+    int quarters = cents / 25;
+    cents %= 25;
+    int dimes = cents / 10;
+    cents %= 10;
+    int nickels = cents / 5;
+    cents %= 5;
+    int pennies = cents;
+
+    System.out.println( "To add up to $" + value + " it takes:\n" );
+    System.out.println( "Quarters: " + quarters );
+    System.out.println( "Dimes: " + dimes );
+    System.out.println( "Nickels: " + nickels );
+    System.out.println( "Pennies: " + pennies );
   }
 }
