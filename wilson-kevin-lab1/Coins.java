@@ -20,7 +20,7 @@ public class Coins
   // Get name and print header
   public static void makeHeader()
   {
-    System.out.print( "Please enter your first name: " );
+    System.out.print( "Please enter your name: " );
     String name = INPUT.nextLine();
     System.out.println( "\nLab 1 written by " + name + "\n" );
   }
@@ -38,26 +38,30 @@ public class Coins
     int nickels = INPUT.nextInt();
     System.out.print( "Pennies: " );
     int pennies = INPUT.nextInt();
+    System.out.println();
     int totalCoins = quarters + dimes + nickels + pennies;
 
-    double value = 0.0;
-    value += quarters * 0.25;
-    value += dimes * 0.10;
-    value += nickels * 0.05;
-    value += pennies * 0.01;
+    int value = 0;
+    value += quarters * 25;
+    value += dimes * 10;
+    value += nickels * 05;
+    value += pennies * 1;
+    double finalValue = value / 100.0;
 
     System.out.println( "Total coins: " + totalCoins );
-    System.out.println( "Value: " + value + "\n" );
+    System.out.println( "Value: $" + finalValue + "\n" );
   }
 
   // Get dollar value and print amount of coins to equal value
   public static void convertToCoins()
   {
-    System.ou.print( "Please enter a valid monetary value: " );
+    System.out.print( "Please enter a valid monetary value: $" );
     double value = INPUT.nextDouble();
-    System.out.println( "\n" );
+    System.out.println();
 
     int cents = ( int ) ( value * 100 );
+    int dollars = cents / 100;
+    cents %= 100;
     int quarters = cents / 25;
     cents %= 25;
     int dimes = cents / 10;
@@ -67,6 +71,7 @@ public class Coins
     int pennies = cents;
 
     System.out.println( "To add up to $" + value + " it takes:\n" );
+    System.out.println( "Dollars: " + dollars );
     System.out.println( "Quarters: " + quarters );
     System.out.println( "Dimes: " + dimes );
     System.out.println( "Nickels: " + nickels );
