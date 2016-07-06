@@ -33,7 +33,7 @@ public class TripPlanner
     return numOfDests;
   }
 
-  // Make itinerary for the tript
+  // Make itinerary for the trip
   public static void getItinerary( int numDests )
   {
     System.out.println( "Your origin is: SAT" );
