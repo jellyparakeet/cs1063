@@ -21,14 +21,16 @@ public class TripPlanner
   // Print header for lab
   public static void printHeader()
   {
-    System.out.println( "Lab 2 written by Kevin Wilson\n" );
+    System.out.println( "\nLab 2 written by Kevin Wilson\n" );
   }
 
   // Get number of destinations from user
   public static int getNumOfDests()
   {
     System.out.println( "How many destinations would you like to travel to?" );
-    return INPUT.nextInt();
+    int numOfDests = INPUT.nextInt();
+    System.out.println();
+    return numOfDests;
   }
 
   // Make itinerary for the tript
@@ -77,6 +79,7 @@ public class TripPlanner
 
     double part1 = Math.pow( Math.sin( dLat / 2 ), 2 ) + Math.cos( lat1 ) * Math.cos( lat2 ) * Math.pow( Math.sin( dLon / 2 ), 2 );
     double part2 = 2 * Math.atan2( Math.sqrt( part1 ), Math.sqrt( 1 - part1 ) );
-    return ( int ) part2 * earthRadius;
+    double part3 = part2 * earthRadius;
+    return ( int ) part3;
   }
 }
