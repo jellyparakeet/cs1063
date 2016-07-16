@@ -1,3 +1,7 @@
+// CardSharks.java
+// Kevin Wilson
+// Implementation of Card Sharks game in Java
+
 import javax.swing.*;
 import javax.imageio.*;
 import java.io.*;
@@ -53,7 +57,7 @@ public class CardSharks extends JFrame implements ActionListener, WindowListener
   
   public JButton betHigherButton;
   public JButton betLowerButton;
-  // follow the syntax for the lower/higher bet buttons to create a button for tie bets
+  public JButton betTieButton;
   public JPanel bettingPanel;
   public JButton takeWinningsButton;
   
@@ -89,7 +93,7 @@ public class CardSharks extends JFrame implements ActionListener, WindowListener
   // Constructor - buildings the graphical user interface
   public CardSharks()
   {
-    super( "Card Sharks Simulation" );
+    super( "Project B - Card Sharks by Kevin Wilson" );
     
     // set the layout of the frame
     setSize( WIDTH, HEIGHT );
@@ -113,18 +117,18 @@ public class CardSharks extends JFrame implements ActionListener, WindowListener
     bettingPanel.setPreferredSize( new Dimension( BETTING_PANEL_WIDTH, 480 ) );
     betHigherButton = new JButton( "Higher" );
     betLowerButton = new JButton( "Lower" );
-  	// follow the syntax for the lower/higher bet buttons to create a button for tie bets
+    betTieButton = new JButton( "Tie" );
     takeWinningsButton = new JButton( "Take Winnings" );
     bettingPanel.add( betHigherButton );
     bettingPanel.add( betLowerButton );
+    bettingPanel.add( betTieButton );
     bettingPanel.add( takeWinningsButton );
- 	// follow the syntax for the lower/higher bet buttons to create a button for tie bets
     
     // Create the card panel
     cardPanel = new JPanel();
     cardPanel.setPreferredSize( new Dimension( WIDTH / 2, 0 ) );
-    cardPanel.setBackground( new Color( 0, 124, 0 ) );
-    cardPanel.setBorder( BorderFactory.createLineBorder( new Color( 0, 0, 124 ), 5 ) );
+    cardPanel.setBackground( new Color( 0, 213, 255 ) );
+    cardPanel.setBorder( BorderFactory.createLineBorder( new Color( 207, 153, 255 ), 5 ) );
     cardPanelLabel = new JLabel( "CARDS" );
     cardPanel.add( cardPanelLabel );
     
@@ -145,7 +149,7 @@ public class CardSharks extends JFrame implements ActionListener, WindowListener
     playButton.addActionListener( this );
     betHigherButton.addActionListener( this );
     betLowerButton.addActionListener( this );
-  	// follow the syntax for the lower/higher bet buttons to create a button for tie bets
+    betTieButton.addActionListener( this );
     takeWinningsButton.addActionListener( this );
     
     // add all the panels to the main JFrame
@@ -189,8 +193,10 @@ public class CardSharks extends JFrame implements ActionListener, WindowListener
     {
       betLower();
     }
-    // add the code to listen for and process the event in which
-    // the user clicks on a tie button that you create above
+    else if( event.getSource().equals( betTieButton ) )
+    {
+      betTie();
+    }
     else if( event.getSource().equals( takeWinningsButton ) )
     {
       takeWinnings();
@@ -201,58 +207,130 @@ public class CardSharks extends JFrame implements ActionListener, WindowListener
     }
   }
   
-  // --------------- Write your three new static methods here ---------------
-  // Method 1:  Determine the card's ordinal rank value.  This method takes in the card value as a parameter and 
-  // returns the ordinal ranking (an integer) that can be used to compare against other cards. The simplest ordinal 
-  // ranking system is 2 - 10 are face value, Jacks are 11, Queens are 12, Kings are 13, and Aces are 14.  
+  public static int getOrdinalRank( int cardValue )
+  {
+    return ( ( cardValue + 12 ) % 13 ) + 2;
+  }
+
+  public static String getRankString( int cardValue )
+  {
+    int ordinalRank = getOrdinalRank( cardValue );
+
+    if( ordinalRank == 11 )
+    {
+      return "J";
+    }
+    else if( ordinalRank == 12 )
+    {
+      return "Q";
+    }
+    else if( ordinalRank == 13 )
+    {
+      return "K";
+    }
+    else if( ordinalRank == 14 )
+    {
+      return "A";
+    }
+    else
+    {
+      return String.valueOf( ordinalRank );
+    }
+  }
+
+  public static String getSuitString( int cardValue )
+  {
+    String suitString = "";
+
+    if( cardValue < 13 )
+    {
+      suitString = "\u2666";
+    }
+    else if( cardValue < 26 )
+    {
+      suitString = "\u2663";
+    }
+    else if( cardValue < 39 )
+    {
+      suitString = "\u2665";
+    }
+    else if( cardvalue < 52 )
+    {
+      suitString = "\u2660";
+    }
+    return suitString;
+  }
   
-  // Method 2:  Determine the card's rank value.  This method takes in the card value as a parameter and returns its 
-  // rank value as a String for display purposes. Cards that have a rank 2 - 10 should show this face value, 
-  // Jacks are "J", Queens are "Q", Kings are "K", and Aces are "A".
- 
-  // Method 3:  Determine the card's suit. This method takes in the card value as a parameter and returns the card's 
-  // suit as a String for display purposes. You can represent it as the actual playing card suit (See Unicode charts), 
-  // spell out the suit (e.g., "clubs"), or abbreviate the suit (e.g., "C" for clubs).
-  // -----------------------------------------------------------------
-  
-  
-  // This method is called after the user clicks on the Higher button
-  // The user is betting that the next card will be higher than current card being shown
-  // Follow the instructions below for how to process a Higher bet
   public void betHigher()
   {
-    // Save the currentCardValue in a variable. This is referred to as the previous card value.
+    int previousCardValue = currentCardValue;
+    revealCard();
+    int prevOrdinalRank = getOrdinalRank( previousCardValue );
+    int currOrdinalRank = getOrdinalRank( currentCardValue );
     
-    // Call the revealCard() method to get and show a new card. This method will
-    // increment the cardPosition by one and store a new value into currentCardValue
-    
-    // Using the methods you wrote to calculate the ordinal ranking for the card value,
-    // compare the previous card's ordinal ranking against the current card's ordinal ranking.  
-    
-    // If the current card's ordinal ranking is higher than the previous card's ordinal ranking then:
-    //      Display a message in the feedback textbox saying the user guessed correctly
-    //      Then check to see if the user is on the last card using cardPosition
-    //      If the user is on the last card, then call the takeWinnings() method as the game is done
-    //         as well as set the gameInSession to false and call the disableBettingPanel() method.
-    // If the current card's ordinal ranking is NOT higher than the previous card's ordinal ranking then:
-    //      Display a message in the feedback textbox saying the user guessed incorrectly and the game is over
-    //         and call the lose() method to end the current game.
+    if( currOrdinalRank > prevOrdinalRank )
+    {
+      appendFeedbackText( "You correctly guessed Higher! Guess again." );
+      if( cardPosition >= 8 )
+      {
+        takeWinnings();
+        gameInSession = false;
+        disableBettingPanel();
+      }
+    }
+    else
+    {
+      appendFeedbackText( "YOU LOSE! You incorrectly guessed Higher. GAME OVER." );
+      lose();
+    }
   }
   
-  // The user is betting that the next card will be lower than current card being shown
-  // This method will look almost the same as the betHigher() method except for how you compare the 
-  // previous card's ordinal ranking against the current card's ordinal ranking and the messages you print out.
   public void betLower()
   {
-    // Your code goes here
+    int previousCardValue = currentCardValue;
+    revealCard();
+    int prevOrdinalRank = getOrdinalRank( previousCardValue );
+    int currOrdinalRank = getOrdinalRank( currentCardValue );
+    
+    if( currOrdinalRank < prevOrdinalRank )
+    {
+      appendFeedbackText( "You correctly guessed Lower! Guess again." );
+      if( cardPosition >= 8 )
+      {
+        takeWinnings();
+        gameInSession = false;
+        disableBettingPanel();
+      }
+    }
+    else
+    {
+      appendFeedbackText( "YOU LOSE! You incorrectly guessed Lower. GAME OVER." );
+      lose();
+    }
   }
   
-  // The user is betting that the next card will be equal to current card being shown
-  // This method will look almost the same as the betHigher() method except for how you compare the 
-  // previous card's ordinal ranking against the current card's ordinal ranking and the messages you print out.
   public void betTie()
   {
-    // Your code goes here
+    int previousCardValue = currentCardValue;
+    revealCard();
+    int prevOrdinalRank = getOrdinalRank( previousCardValue );
+    int currOrdinalRank = getOrdinalRank( currentCardValue );
+    
+    if( currOrdinalRank == prevOrdinalRank )
+    {
+      appendFeedbackText( "You correctly guessed a Tie! Guess again." );
+      if( cardPosition >= 8 )
+      {
+        takeWinnings();
+        gameInSession = false;
+        disableBettingPanel();
+      }
+    }
+    else
+    {
+      appendFeedbackText( "YOU LOSE! You incorrectly guessed a Tie. GAME OVER." );
+      lose();
+    }
   }
   
   // This method handles the case when the user has won and (taken winnings by choice
@@ -331,6 +409,9 @@ public class CardSharks extends JFrame implements ActionListener, WindowListener
       cardPosition = cardPosition + 1;
       
       // Display a message in the feedback message telling the user what card was shown including rank and suit
+      String rank = getRankString( currentCardValue );
+      String suit = getSuitString( currentCardValue );
+      appendFeedbackText( "The card is: " + rank + suit );
     }
   }
   
@@ -424,6 +505,7 @@ public class CardSharks extends JFrame implements ActionListener, WindowListener
   {
     betHigherButton.setEnabled( true );
     betLowerButton.setEnabled( true );
+    betTieButton.setEnabled( true );
     takeWinningsButton.setEnabled( true );
   }
   
@@ -433,6 +515,7 @@ public class CardSharks extends JFrame implements ActionListener, WindowListener
   {
     betHigherButton.setEnabled( false );
     betLowerButton.setEnabled( false );
+    betTieButton.setEnabled( false );
     takeWinningsButton.setEnabled( false );
   }
     
